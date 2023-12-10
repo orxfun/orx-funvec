@@ -1,0 +1,19 @@
+[package]
+name = "orx-funvec"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+derive-new = "0.6.0"
+indexmap = "2.1.0"
+ndarray = "0.15.6"
+orx-closure = "0.1.1"
+
+
+[dev-dependencies]
+criterion = { version = "0.5", features = ["html_reports"] }
+test-case = "3.3.1"
+
+[[bench]]
+name = "funvec_d1_vec_iter_scattered"
+harness = false
