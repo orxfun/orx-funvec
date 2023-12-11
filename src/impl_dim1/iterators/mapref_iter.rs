@@ -97,7 +97,7 @@ impl<T> MapRef<T> for IndexMap<usize, T> {
 }
 
 // ndarray
-#[cfg(feature = "ndarray")]
+#[cfg(feature = "impl_ndarray")]
 impl<T> MapRef<T> for ndarray::Array1<T> {
     #[inline(always)]
     fn get_ref_by_key(&self, key: usize) -> Option<&T> {
