@@ -5,8 +5,8 @@ edition = "2021"
 
 [dependencies]
 derive-new = "0.6"
-indexmap = "2.1"
 orx-closure = "0.1"
+indexmap = { version = "2.1", optional = true }
 ndarray = { version = "0.15", optional = true }
 
 [dev-dependencies]
@@ -19,4 +19,6 @@ harness = false
 
 [features]
 default = []
+impl_all = ["ndarray", "indexmap"]
 impl_ndarray = ["ndarray"]
+impl_indexmap = ["indexmap"]

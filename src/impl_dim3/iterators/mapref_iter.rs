@@ -1,5 +1,4 @@
 use crate::{funvec_d2::FunVecRefD2, funvec_d3::Ind, scalar_asvec::Scalar};
-use indexmap::IndexMap;
 use orx_closure::{ClosureOptRef, ClosureOptRefOneOf2, ClosureOptRefOneOf3, ClosureOptRefOneOf4};
 use std::{
     collections::{BTreeMap, HashMap},
@@ -70,7 +69,9 @@ impl<T, V2: FunVecRefD2<T>> MapRefD3<T> for BTreeMap<usize, V2> {
             .and_then(|x| x.ref_at(indices.1, indices.2))
     }
 }
-impl<T, V2: FunVecRefD2<T>> MapRefD3<T> for IndexMap<usize, V2> {
+
+#[cfg(any(feature = "impl_all", feature = "impl_indexmap"))]
+impl<T, V2: FunVecRefD2<T>> MapRefD3<T> for indexmap::IndexMap<usize, V2> {
     #[inline(always)]
     fn get_ref_by_key(&self, indices: Ind) -> Option<&T> {
         self.get(&indices.0)
@@ -105,7 +106,7 @@ impl<C1, C2, C3, C4, T: ?Sized> MapRefD3<T> for ClosureOptRefOneOf4<C1, C2, C3, 
 }
 
 // ndarray
-#[cfg(feature = "impl_ndarray")]
+#[cfg(any(feature = "impl_all", feature = "impl_ndarray"))]
 impl<T> MapRefD3<T> for ndarray::Array3<T> {
     #[inline(always)]
     fn get_ref_by_key(&self, key: Ind) -> Option<&T> {

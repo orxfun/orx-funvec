@@ -1,5 +1,4 @@
 use crate::scalar_asvec::Scalar;
-use indexmap::IndexMap;
 use orx_closure::{Closure, ClosureOneOf2, ClosureOneOf3, ClosureOneOf4};
 use std::collections::{BTreeMap, HashMap};
 use std::marker::PhantomData;
@@ -91,7 +90,8 @@ impl<T: Clone + Copy> MapVal<T> for BTreeMap<usize, T> {
         self.get(&key).copied()
     }
 }
-impl<T: Clone + Copy> MapVal<T> for IndexMap<usize, T> {
+#[cfg(any(feature = "impl_all", feature = "impl_indexmap"))]
+impl<T: Clone + Copy> MapVal<T> for indexmap::IndexMap<usize, T> {
     #[inline(always)]
     fn get_val_by_key(&self, key: usize) -> Option<T> {
         self.get(&key).copied()
@@ -107,7 +107,7 @@ impl<T: Clone + Copy> MapVal<T> for Box<dyn Fn(usize) -> Option<T>> {
 }
 
 // ndarray
-#[cfg(feature = "impl_ndarray")]
+#[cfg(any(feature = "impl_all", feature = "impl_ndarray"))]
 impl<T: Clone + Copy> MapVal<T> for ndarray::Array1<T> {
     #[inline(always)]
     fn get_val_by_key(&self, key: usize) -> Option<T> {
