@@ -1,5 +1,4 @@
 use crate::scalar_asvec::Scalar;
-use indexmap::IndexMap;
 use orx_closure::{ClosureOptRef, ClosureOptRefOneOf2, ClosureOptRefOneOf3, ClosureOptRefOneOf4};
 use std::collections::{BTreeMap, HashMap};
 use std::marker::PhantomData;
@@ -89,7 +88,8 @@ impl<T> MapRef<T> for BTreeMap<usize, T> {
         self.get(&key)
     }
 }
-impl<T> MapRef<T> for IndexMap<usize, T> {
+#[cfg(any(feature = "impl_all", feature = "impl_indexmap"))]
+impl<T> MapRef<T> for indexmap::IndexMap<usize, T> {
     #[inline(always)]
     fn get_ref_by_key(&self, key: usize) -> Option<&T> {
         self.get(&key)
@@ -97,7 +97,7 @@ impl<T> MapRef<T> for IndexMap<usize, T> {
 }
 
 // ndarray
-#[cfg(feature = "impl_ndarray")]
+#[cfg(any(feature = "impl_all", feature = "impl_ndarray"))]
 impl<T> MapRef<T> for ndarray::Array1<T> {
     #[inline(always)]
     fn get_ref_by_key(&self, key: usize) -> Option<&T> {

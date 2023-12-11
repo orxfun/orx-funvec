@@ -1,5 +1,4 @@
 use crate::{funvec_d2::FunVecD2, funvec_d3::Ind, scalar_asvec::Scalar};
-use indexmap::IndexMap;
 use orx_closure::{Closure, ClosureOneOf2, ClosureOneOf3, ClosureOneOf4};
 use std::{
     collections::{BTreeMap, HashMap},
@@ -71,7 +70,9 @@ impl<T: Clone + Copy, V2: FunVecD2<T>> MapValD3<T> for BTreeMap<usize, V2> {
             .and_then(|x| x.val_at(indices.1, indices.2))
     }
 }
-impl<T: Clone + Copy, V2: FunVecD2<T>> MapValD3<T> for IndexMap<usize, V2> {
+
+#[cfg(any(feature = "impl_all", feature = "impl_indexmap"))]
+impl<T: Clone + Copy, V2: FunVecD2<T>> MapValD3<T> for indexmap::IndexMap<usize, V2> {
     #[inline(always)]
     fn get_val_by_key(&self, indices: Ind) -> Option<T> {
         self.get(&indices.0)
@@ -116,7 +117,7 @@ impl<T: Clone + Copy> MapValD3<T> for Box<dyn Fn(Ind) -> Option<T>> {
 }
 
 // ndarray
-#[cfg(feature = "impl_ndarray")]
+#[cfg(any(feature = "impl_all", feature = "impl_ndarray"))]
 impl<T: Clone + Copy> MapValD3<T> for ndarray::Array3<T> {
     #[inline(always)]
     fn get_val_by_key(&self, key: Ind) -> Option<T> {

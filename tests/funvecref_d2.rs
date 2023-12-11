@@ -1,5 +1,3 @@
-use indexmap::IndexMap;
-use orx_closure::Capture;
 use orx_funvec::*;
 use std::collections::{BTreeMap, HashMap};
 
@@ -38,31 +36,37 @@ fn test_variants() {
     assert_at(&vec);
     assert_iter_over(&vec);
 
-    struct Repo {
-        storage: IndexMap<(usize, usize), usize>,
-    }
-    impl Repo {
-        fn new() -> Self {
-            Self {
-                storage: IndexMap::from_iter(
-                    [
-                        ((0, 0), 0),
-                        ((0, 1), 1),
-                        ((0, 2), 2),
-                        ((1, 0), 1),
-                        ((1, 1), 2),
-                        ((1, 2), 3),
-                    ]
-                    .into_iter(),
-                ),
+    #[cfg(any(feature = "impl_all", feature = "impl_indexmap"))]
+    {
+        use indexmap::IndexMap;
+        use orx_closure::Capture;
+
+        struct Repo {
+            storage: IndexMap<(usize, usize), usize>,
+        }
+        impl Repo {
+            fn new() -> Self {
+                Self {
+                    storage: IndexMap::from_iter(
+                        [
+                            ((0, 0), 0),
+                            ((0, 1), 1),
+                            ((0, 2), 2),
+                            ((1, 0), 1),
+                            ((1, 1), 2),
+                            ((1, 2), 3),
+                        ]
+                        .into_iter(),
+                    ),
+                }
+            }
+            fn get(&self, i: usize, j: usize) -> Option<&usize> {
+                self.storage.get(&(i, j))
             }
         }
-        fn get(&self, i: usize, j: usize) -> Option<&usize> {
-            self.storage.get(&(i, j))
-        }
+        let repo = Repo::new();
+        let vec = Capture(repo).fun_option_ref(|r, (i, j)| r.get(i, j));
+        assert_at(&vec);
+        assert_iter_over(&vec);
     }
-    let repo = Repo::new();
-    let vec = Capture(repo).fun_option_ref(|r, (i, j)| r.get(i, j));
-    assert_at(&vec);
-    assert_iter_over(&vec);
 }
