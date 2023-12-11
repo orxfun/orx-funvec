@@ -105,6 +105,7 @@ impl<C1, C2, C3, C4, T: ?Sized> MapRefD3<T> for ClosureOptRefOneOf4<C1, C2, C3, 
 }
 
 // ndarray
+#[cfg(feature = "ndarray")]
 impl<T> MapRefD3<T> for ndarray::Array3<T> {
     #[inline(always)]
     fn get_ref_by_key(&self, key: Ind) -> Option<&T> {
