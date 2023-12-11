@@ -4,16 +4,19 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-derive-new = "0.6.0"
-indexmap = "2.1.0"
-ndarray = "0.15.6"
-orx-closure = "0.1.1"
-
+derive-new = "0.6"
+indexmap = "2.1"
+orx-closure = "0.1"
+ndarray = { version = "0.15", optional = true }
 
 [dev-dependencies]
 criterion = { version = "0.5", features = ["html_reports"] }
-test-case = "3.3.1"
+test-case = "3.3"
 
 [[bench]]
 name = "funvec_d1_vec_iter_scattered"
 harness = false
+
+[features]
+default = []
+impl_ndarray = ["ndarray"]

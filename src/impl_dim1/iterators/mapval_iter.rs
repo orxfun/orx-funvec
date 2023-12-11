@@ -107,6 +107,7 @@ impl<T: Clone + Copy> MapVal<T> for Box<dyn Fn(usize) -> Option<T>> {
 }
 
 // ndarray
+#[cfg(feature = "impl_ndarray")]
 impl<T: Clone + Copy> MapVal<T> for ndarray::Array1<T> {
     #[inline(always)]
     fn get_val_by_key(&self, key: usize) -> Option<T> {

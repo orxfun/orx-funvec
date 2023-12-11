@@ -70,6 +70,7 @@ fn get_euclidean_distance(location1: (f64, f64), location2: (f64, f64)) -> i32 {
 }
 
 #[test]
+#[cfg(feature = "impl_ndarray")]
 fn single_commodity_mcnf() {
     // mcnf problem with a single source and sink
     let source = 0;
