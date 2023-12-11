@@ -9,15 +9,15 @@ fn assert_at<V: FunVecD2<usize>>(vec: &V) {
     for i in 0..N1 {
         for j in 0..N2 {
             let val = i + j;
-            assert_eq!(Some(val), vec.val_at(i, j));
+            assert_eq!(Some(val), vec.at(i, j));
         }
-        assert_eq!(None, vec.val_at(i, N2));
+        assert_eq!(None, vec.at(i, N2));
     }
-    assert_eq!(None, vec.val_at(N1, 0));
+    assert_eq!(None, vec.at(N1, 0));
 }
 fn assert_iter_over<V: FunVecD2<usize>>(vec: &V) {
     let iter = (0..N1).flat_map(|i| (0..N2).map(move |j| (i, j)));
-    let sum: usize = vec.val_iter_over(iter).flatten().sum();
+    let sum: usize = vec.iter_over(iter).flatten().sum();
     assert_eq!(9, sum);
 }
 

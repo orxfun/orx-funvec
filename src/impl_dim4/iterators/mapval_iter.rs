@@ -1,4 +1,8 @@
-use crate::{funvec_d3::FunVecD3, funvec_d4::Ind, scalar_asvec::Scalar};
+use crate::{
+    funvec_d3::FunVecD3,
+    funvec_d4::Ind,
+    vectors_by_scalars::{EmptyVec, ScalarAsVec},
+};
 use orx_closure::{Closure, ClosureOneOf2, ClosureOneOf3, ClosureOneOf4};
 use std::{
     collections::{BTreeMap, HashMap},
@@ -35,24 +39,29 @@ where
 }
 
 // impl map-val
-impl<T: Clone + Copy> MapValD4<T> for Scalar<T> {
+impl<T: Clone + Copy> MapValD4<T> for ScalarAsVec<T> {
     #[inline(always)]
     fn get_val_by_key(&self, _: Ind) -> Option<T> {
-        self.0
+        Some(self.0)
+    }
+}
+impl<T: Clone + Copy> MapValD4<T> for EmptyVec<T> {
+    fn get_val_by_key(&self, _: Ind) -> Option<T> {
+        None
     }
 }
 impl<T: Clone + Copy, V3: FunVecD3<T>> MapValD4<T> for Vec<V3> {
     #[inline(always)]
     fn get_val_by_key(&self, indices: Ind) -> Option<T> {
         self.get(indices.0)
-            .and_then(|x| x.val_at(indices.1, indices.2, indices.3))
+            .and_then(|x| x.at(indices.1, indices.2, indices.3))
     }
 }
 impl<const N: usize, T: Clone + Copy, V3: FunVecD3<T>> MapValD4<T> for [V3; N] {
     #[inline(always)]
     fn get_val_by_key(&self, indices: Ind) -> Option<T> {
         self.get(indices.0)
-            .and_then(|x| x.val_at(indices.1, indices.2, indices.3))
+            .and_then(|x| x.at(indices.1, indices.2, indices.3))
     }
 }
 
@@ -60,14 +69,14 @@ impl<T: Clone + Copy, V3: FunVecD3<T>> MapValD4<T> for HashMap<usize, V3> {
     #[inline(always)]
     fn get_val_by_key(&self, indices: Ind) -> Option<T> {
         self.get(&indices.0)
-            .and_then(|x| x.val_at(indices.1, indices.2, indices.3))
+            .and_then(|x| x.at(indices.1, indices.2, indices.3))
     }
 }
 impl<T: Clone + Copy, V3: FunVecD3<T>> MapValD4<T> for BTreeMap<usize, V3> {
     #[inline(always)]
     fn get_val_by_key(&self, indices: Ind) -> Option<T> {
         self.get(&indices.0)
-            .and_then(|x| x.val_at(indices.1, indices.2, indices.3))
+            .and_then(|x| x.at(indices.1, indices.2, indices.3))
     }
 }
 
@@ -76,7 +85,7 @@ impl<T: Clone + Copy, V3: FunVecD3<T>> MapValD4<T> for indexmap::IndexMap<usize,
     #[inline(always)]
     fn get_val_by_key(&self, indices: Ind) -> Option<T> {
         self.get(&indices.0)
-            .and_then(|x| x.val_at(indices.1, indices.2, indices.3))
+            .and_then(|x| x.at(indices.1, indices.2, indices.3))
     }
 }
 

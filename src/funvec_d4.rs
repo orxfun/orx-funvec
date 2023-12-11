@@ -7,9 +7,9 @@ pub trait FunVecD4<T> {
         Self: 'a,
         I: Iterator<Item = Ind> + 'a;
 
-    fn val_at(&self, i: usize, j: usize, k: usize, l: usize) -> Option<T>;
+    fn at(&self, i: usize, j: usize, k: usize, l: usize) -> Option<T>;
 
-    fn val_iter_over<'a, I>(&self, indices: I) -> Self::Iter<'_, I>
+    fn iter_over<'a, I>(&self, indices: I) -> Self::Iter<'_, I>
     where
         I: Iterator<Item = Ind> + 'a;
 }

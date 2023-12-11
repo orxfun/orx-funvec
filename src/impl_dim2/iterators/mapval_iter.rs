@@ -1,4 +1,8 @@
-use crate::{funvec_d2::Ind, scalar_asvec::Scalar, FunVecD1};
+use crate::{
+    funvec_d2::Ind,
+    vectors_by_scalars::{EmptyVec, ScalarAsVec},
+    FunVecD1,
+};
 use orx_closure::{Closure, ClosureOneOf2, ClosureOneOf3, ClosureOneOf4};
 use std::{
     collections::{BTreeMap, HashMap},
@@ -35,42 +39,47 @@ where
 }
 
 // impl map-val
-impl<T: Clone + Copy> MapValD2<T> for Scalar<T> {
+impl<T: Clone + Copy> MapValD2<T> for ScalarAsVec<T> {
     #[inline(always)]
     fn get_val_by_key(&self, _: Ind) -> Option<T> {
-        self.0
+        Some(self.0)
+    }
+}
+impl<T: Clone + Copy> MapValD2<T> for EmptyVec<T> {
+    fn get_val_by_key(&self, _: Ind) -> Option<T> {
+        None
     }
 }
 impl<T: Clone + Copy, V1: FunVecD1<T>> MapValD2<T> for Vec<V1> {
     #[inline(always)]
     fn get_val_by_key(&self, indices: Ind) -> Option<T> {
-        self.get(indices.0).and_then(|x| x.val_at(indices.1))
+        self.get(indices.0).and_then(|x| x.at(indices.1))
     }
 }
 impl<const N: usize, T: Clone + Copy, V1: FunVecD1<T>> MapValD2<T> for [V1; N] {
     #[inline(always)]
     fn get_val_by_key(&self, indices: Ind) -> Option<T> {
-        self.get(indices.0).and_then(|x| x.val_at(indices.1))
+        self.get(indices.0).and_then(|x| x.at(indices.1))
     }
 }
 
 impl<T: Clone + Copy, V1: FunVecD1<T>> MapValD2<T> for HashMap<usize, V1> {
     #[inline(always)]
     fn get_val_by_key(&self, indices: Ind) -> Option<T> {
-        self.get(&indices.0).and_then(|x| x.val_at(indices.1))
+        self.get(&indices.0).and_then(|x| x.at(indices.1))
     }
 }
 impl<T: Clone + Copy, V1: FunVecD1<T>> MapValD2<T> for BTreeMap<usize, V1> {
     #[inline(always)]
     fn get_val_by_key(&self, indices: Ind) -> Option<T> {
-        self.get(&indices.0).and_then(|x| x.val_at(indices.1))
+        self.get(&indices.0).and_then(|x| x.at(indices.1))
     }
 }
 #[cfg(any(feature = "impl_all", feature = "impl_indexmap"))]
 impl<T: Clone + Copy, V1: FunVecD1<T>> MapValD2<T> for indexmap::IndexMap<usize, V1> {
     #[inline(always)]
     fn get_val_by_key(&self, indices: Ind) -> Option<T> {
-        self.get(&indices.0).and_then(|x| x.val_at(indices.1))
+        self.get(&indices.0).and_then(|x| x.at(indices.1))
     }
 }
 
