@@ -1,4 +1,4 @@
-use crate::scalar_asvec::Scalar;
+use crate::vectors_by_scalars::{EmptyVec, ScalarAsVec};
 use orx_closure::{ClosureOptRef, ClosureOptRefOneOf2, ClosureOptRefOneOf3, ClosureOptRefOneOf4};
 use std::collections::{BTreeMap, HashMap};
 use std::marker::PhantomData;
@@ -33,9 +33,14 @@ where
 }
 
 // impl map-ref
-impl<T> MapRef<T> for Scalar<T> {
+impl<T> MapRef<T> for ScalarAsVec<T> {
     fn get_ref_by_key(&self, _: usize) -> Option<&T> {
-        self.0.as_ref()
+        Some(&self.0)
+    }
+}
+impl<T> MapRef<T> for EmptyVec<T> {
+    fn get_ref_by_key(&self, _: usize) -> Option<&T> {
+        None
     }
 }
 impl<T> MapRef<T> for Vec<T> {

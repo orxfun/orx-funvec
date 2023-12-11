@@ -1,4 +1,8 @@
-use crate::{funvec_d2::Ind, scalar_asvec::Scalar, FunVecD1Ref};
+use crate::{
+    funvec_d2::Ind,
+    vectors_by_scalars::{EmptyVec, ScalarAsVec},
+    FunVecD1Ref,
+};
 use orx_closure::{ClosureOptRef, ClosureOptRefOneOf2, ClosureOptRefOneOf3, ClosureOptRefOneOf4};
 use std::{
     collections::{BTreeMap, HashMap},
@@ -35,9 +39,14 @@ where
 }
 
 // impl map-ref
-impl<T> MapRefD2<T> for Scalar<T> {
+impl<T> MapRefD2<T> for ScalarAsVec<T> {
     fn get_ref_by_key(&self, _: Ind) -> Option<&T> {
-        self.0.as_ref()
+        Some(&self.0)
+    }
+}
+impl<T> MapRefD2<T> for EmptyVec<T> {
+    fn get_ref_by_key(&self, _: Ind) -> Option<&T> {
+        None
     }
 }
 impl<T, V1: FunVecD1Ref<T>> MapRefD2<T> for Vec<V1> {

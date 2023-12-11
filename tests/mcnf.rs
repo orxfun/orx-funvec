@@ -1,5 +1,5 @@
 use orx_closure::Capture;
-use orx_funvec::{FunVecD1, FunVecD2, Scalar};
+use orx_funvec::{FunVecD1, FunVecD2, ScalarAsVec};
 use std::collections::HashMap;
 
 const N: usize = 4;
@@ -33,7 +33,7 @@ where
     fn fake_solve(&self) -> FakeResult {
         let sum_demands = self
             .demands
-            .val_iter_over(0..N)
+            .iter_over(0..N)
             .flatten()
             .filter(|x| x > &0)
             .sum();
@@ -42,11 +42,11 @@ where
         let mut sum_capacities = 0;
         for i in 0..N {
             for j in 0..N {
-                if let Some(cost) = self.costs.val_at(i, j) {
+                if let Some(cost) = self.costs.at(i, j) {
                     sum_costs += cost;
                 }
 
-                if let Some(capacity) = self.capacities.val_at(i, j) {
+                if let Some(capacity) = self.capacities.at(i, j) {
                     sum_capacities += capacity;
                 }
             }
@@ -196,7 +196,7 @@ fn shortest_distance() {
     });
 
     // uniform capacities for all edges: any scalar qualifies as a FunVecD1, FunVecD2, etc.
-    let capacities = Scalar::new(1);
+    let capacities = ScalarAsVec(1);
 
     // simulate & assert
     let solver = FakeMcnfSolver::new(demands, costs, capacities);
@@ -220,7 +220,7 @@ fn shortest_num_edges() {
     });
 
     // uniform capacities and costs for all edges
-    let costs = Scalar::new(1);
+    let costs = ScalarAsVec(1);
     let capacities = Capture(()).fun(|_, ij| const_if_not_self_edge(ij, 1));
 
     // simulate & assert

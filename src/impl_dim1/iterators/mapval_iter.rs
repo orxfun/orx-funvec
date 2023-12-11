@@ -1,4 +1,4 @@
-use crate::scalar_asvec::Scalar;
+use crate::vectors_by_scalars::{EmptyVec, ScalarAsVec};
 use orx_closure::{Closure, ClosureOneOf2, ClosureOneOf3, ClosureOneOf4};
 use std::collections::{BTreeMap, HashMap};
 use std::marker::PhantomData;
@@ -33,10 +33,15 @@ where
 }
 
 // impl map-val
-impl<T: Clone + Copy> MapVal<T> for Scalar<T> {
+impl<T: Clone + Copy> MapVal<T> for ScalarAsVec<T> {
     #[inline(always)]
     fn get_val_by_key(&self, _: usize) -> Option<T> {
-        self.0
+        Some(self.0)
+    }
+}
+impl<T: Clone + Copy> MapVal<T> for EmptyVec<T> {
+    fn get_val_by_key(&self, _: usize) -> Option<T> {
+        None
     }
 }
 impl<T: Clone + Copy> MapVal<T> for Vec<T> {

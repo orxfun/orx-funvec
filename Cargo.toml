@@ -14,7 +14,7 @@ criterion = { version = "0.5", features = ["html_reports"] }
 test-case = "3.3"
 
 [[bench]]
-name = "funvec_d1_vec_iter_scattered"
+name = "funvec_d1_scalar_optimization"
 harness = false
 
 [features]
