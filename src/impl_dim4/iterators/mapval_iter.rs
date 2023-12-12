@@ -79,13 +79,31 @@ impl<T: Clone + Copy, V3: FunVecD3<T>> MapValD4<T> for BTreeMap<usize, V3> {
             .and_then(|x| x.at(indices.1, indices.2, indices.3))
     }
 }
-
 #[cfg(any(feature = "impl_all", feature = "impl_indexmap"))]
 impl<T: Clone + Copy, V3: FunVecD3<T>> MapValD4<T> for indexmap::IndexMap<usize, V3> {
     #[inline(always)]
     fn get_val_by_key(&self, indices: Ind) -> Option<T> {
         self.get(&indices.0)
             .and_then(|x| x.at(indices.1, indices.2, indices.3))
+    }
+}
+impl<T: Clone + Copy> MapValD4<T> for HashMap<Ind, T> {
+    #[inline(always)]
+    fn get_val_by_key(&self, indices: Ind) -> Option<T> {
+        self.get(&indices).copied()
+    }
+}
+impl<T: Clone + Copy> MapValD4<T> for BTreeMap<Ind, T> {
+    #[inline(always)]
+    fn get_val_by_key(&self, indices: Ind) -> Option<T> {
+        self.get(&indices).copied()
+    }
+}
+#[cfg(any(feature = "impl_all", feature = "impl_indexmap"))]
+impl<T: Clone + Copy> MapValD4<T> for indexmap::IndexMap<Ind, T> {
+    #[inline(always)]
+    fn get_val_by_key(&self, indices: Ind) -> Option<T> {
+        self.get(&indices).copied()
     }
 }
 

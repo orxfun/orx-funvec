@@ -78,13 +78,31 @@ impl<T, V3: FunVecRefD3<T>> MapRefD4<T> for BTreeMap<usize, V3> {
             .and_then(|x| x.ref_at(indices.1, indices.2, indices.3))
     }
 }
-
 #[cfg(any(feature = "impl_all", feature = "impl_indexmap"))]
 impl<T, V3: FunVecRefD3<T>> MapRefD4<T> for indexmap::IndexMap<usize, V3> {
     #[inline(always)]
     fn get_ref_by_key(&self, indices: Ind) -> Option<&T> {
         self.get(&indices.0)
             .and_then(|x| x.ref_at(indices.1, indices.2, indices.3))
+    }
+}
+impl<T> MapRefD4<T> for HashMap<Ind, T> {
+    #[inline(always)]
+    fn get_ref_by_key(&self, indices: Ind) -> Option<&T> {
+        self.get(&indices)
+    }
+}
+impl<T> MapRefD4<T> for BTreeMap<Ind, T> {
+    #[inline(always)]
+    fn get_ref_by_key(&self, indices: Ind) -> Option<&T> {
+        self.get(&indices)
+    }
+}
+#[cfg(any(feature = "impl_all", feature = "impl_indexmap"))]
+impl<T> MapRefD4<T> for indexmap::IndexMap<Ind, T> {
+    #[inline(always)]
+    fn get_ref_by_key(&self, indices: Ind) -> Option<&T> {
+        self.get(&indices)
     }
 }
 

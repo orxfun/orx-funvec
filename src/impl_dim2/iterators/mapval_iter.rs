@@ -82,6 +82,25 @@ impl<T: Clone + Copy, V1: FunVecD1<T>> MapValD2<T> for indexmap::IndexMap<usize,
         self.get(&indices.0).and_then(|x| x.at(indices.1))
     }
 }
+impl<T: Clone + Copy> MapValD2<T> for HashMap<Ind, T> {
+    #[inline(always)]
+    fn get_val_by_key(&self, indices: Ind) -> Option<T> {
+        self.get(&indices).copied()
+    }
+}
+impl<T: Clone + Copy> MapValD2<T> for BTreeMap<Ind, T> {
+    #[inline(always)]
+    fn get_val_by_key(&self, indices: Ind) -> Option<T> {
+        self.get(&indices).copied()
+    }
+}
+#[cfg(any(feature = "impl_all", feature = "impl_indexmap"))]
+impl<T: Clone + Copy> MapValD2<T> for indexmap::IndexMap<Ind, T> {
+    #[inline(always)]
+    fn get_val_by_key(&self, indices: Ind) -> Option<T> {
+        self.get(&indices).copied()
+    }
+}
 
 // non-recursive
 impl<C1, T: Clone + Copy> MapValD2<T> for Closure<C1, Ind, Option<T>> {

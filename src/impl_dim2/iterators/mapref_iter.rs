@@ -81,6 +81,25 @@ impl<T, V1: FunVecD1Ref<T>> MapRefD2<T> for indexmap::IndexMap<usize, V1> {
         self.get(&indices.0).and_then(|x| x.ref_at(indices.1))
     }
 }
+impl<T> MapRefD2<T> for HashMap<Ind, T> {
+    #[inline(always)]
+    fn get_ref_by_key(&self, indices: Ind) -> Option<&T> {
+        self.get(&indices)
+    }
+}
+impl<T> MapRefD2<T> for BTreeMap<Ind, T> {
+    #[inline(always)]
+    fn get_ref_by_key(&self, indices: Ind) -> Option<&T> {
+        self.get(&indices)
+    }
+}
+#[cfg(any(feature = "impl_all", feature = "impl_indexmap"))]
+impl<T> MapRefD2<T> for indexmap::IndexMap<Ind, T> {
+    #[inline(always)]
+    fn get_ref_by_key(&self, indices: Ind) -> Option<&T> {
+        self.get(&indices)
+    }
+}
 
 // non-recursive
 impl<C1, T: ?Sized> MapRefD2<T> for ClosureOptRef<C1, Ind, T> {
