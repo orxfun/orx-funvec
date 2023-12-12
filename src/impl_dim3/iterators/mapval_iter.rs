@@ -10,7 +10,7 @@ use std::{
 };
 
 pub trait MapValD3<T: Clone + Copy> {
-    fn get_val_by_key(&self, indices: Ind) -> Option<T>;
+    fn get_value_at(&self, indices: Ind) -> Option<T>;
 }
 
 #[derive(derive_new::new)]
@@ -34,45 +34,45 @@ where
     fn next(&mut self) -> Option<Self::Item> {
         self.indices_iter
             .next()
-            .map(|indices| self.value.get_val_by_key(indices))
+            .map(|indices| self.value.get_value_at(indices))
     }
 }
 
 // impl map-val
 impl<T: Clone + Copy> MapValD3<T> for ScalarAsVec<T> {
     #[inline(always)]
-    fn get_val_by_key(&self, _: Ind) -> Option<T> {
+    fn get_value_at(&self, _: Ind) -> Option<T> {
         Some(self.0)
     }
 }
 impl<T: Clone + Copy> MapValD3<T> for EmptyVec<T> {
-    fn get_val_by_key(&self, _: Ind) -> Option<T> {
+    fn get_value_at(&self, _: Ind) -> Option<T> {
         None
     }
 }
 impl<T: Clone + Copy, V2: FunVecD2<T>> MapValD3<T> for Vec<V2> {
     #[inline(always)]
-    fn get_val_by_key(&self, indices: Ind) -> Option<T> {
+    fn get_value_at(&self, indices: Ind) -> Option<T> {
         self.get(indices.0).and_then(|x| x.at(indices.1, indices.2))
     }
 }
 impl<const N: usize, T: Clone + Copy, V2: FunVecD2<T>> MapValD3<T> for [V2; N] {
     #[inline(always)]
-    fn get_val_by_key(&self, indices: Ind) -> Option<T> {
+    fn get_value_at(&self, indices: Ind) -> Option<T> {
         self.get(indices.0).and_then(|x| x.at(indices.1, indices.2))
     }
 }
 
 impl<T: Clone + Copy, V2: FunVecD2<T>> MapValD3<T> for HashMap<usize, V2> {
     #[inline(always)]
-    fn get_val_by_key(&self, indices: Ind) -> Option<T> {
+    fn get_value_at(&self, indices: Ind) -> Option<T> {
         self.get(&indices.0)
             .and_then(|x| x.at(indices.1, indices.2))
     }
 }
 impl<T: Clone + Copy, V2: FunVecD2<T>> MapValD3<T> for BTreeMap<usize, V2> {
     #[inline(always)]
-    fn get_val_by_key(&self, indices: Ind) -> Option<T> {
+    fn get_value_at(&self, indices: Ind) -> Option<T> {
         self.get(&indices.0)
             .and_then(|x| x.at(indices.1, indices.2))
     }
@@ -80,27 +80,27 @@ impl<T: Clone + Copy, V2: FunVecD2<T>> MapValD3<T> for BTreeMap<usize, V2> {
 #[cfg(any(feature = "impl_all", feature = "impl_indexmap"))]
 impl<T: Clone + Copy, V2: FunVecD2<T>> MapValD3<T> for indexmap::IndexMap<usize, V2> {
     #[inline(always)]
-    fn get_val_by_key(&self, indices: Ind) -> Option<T> {
+    fn get_value_at(&self, indices: Ind) -> Option<T> {
         self.get(&indices.0)
             .and_then(|x| x.at(indices.1, indices.2))
     }
 }
 impl<T: Clone + Copy> MapValD3<T> for HashMap<Ind, T> {
     #[inline(always)]
-    fn get_val_by_key(&self, indices: Ind) -> Option<T> {
+    fn get_value_at(&self, indices: Ind) -> Option<T> {
         self.get(&indices).copied()
     }
 }
 impl<T: Clone + Copy> MapValD3<T> for BTreeMap<Ind, T> {
     #[inline(always)]
-    fn get_val_by_key(&self, indices: Ind) -> Option<T> {
+    fn get_value_at(&self, indices: Ind) -> Option<T> {
         self.get(&indices).copied()
     }
 }
 #[cfg(any(feature = "impl_all", feature = "impl_indexmap"))]
 impl<T: Clone + Copy> MapValD3<T> for indexmap::IndexMap<Ind, T> {
     #[inline(always)]
-    fn get_val_by_key(&self, indices: Ind) -> Option<T> {
+    fn get_value_at(&self, indices: Ind) -> Option<T> {
         self.get(&indices).copied()
     }
 }
@@ -108,19 +108,19 @@ impl<T: Clone + Copy> MapValD3<T> for indexmap::IndexMap<Ind, T> {
 // non-recursive
 impl<C1, T: Clone + Copy> MapValD3<T> for Closure<C1, Ind, Option<T>> {
     #[inline(always)]
-    fn get_val_by_key(&self, indices: Ind) -> Option<T> {
+    fn get_value_at(&self, indices: Ind) -> Option<T> {
         self.call(indices)
     }
 }
 impl<C1, C2, T: Clone + Copy> MapValD3<T> for ClosureOneOf2<C1, C2, Ind, Option<T>> {
     #[inline(always)]
-    fn get_val_by_key(&self, indices: Ind) -> Option<T> {
+    fn get_value_at(&self, indices: Ind) -> Option<T> {
         self.call(indices)
     }
 }
 impl<C1, C2, C3, T: Clone + Copy> MapValD3<T> for ClosureOneOf3<C1, C2, C3, Ind, Option<T>> {
     #[inline(always)]
-    fn get_val_by_key(&self, indices: Ind) -> Option<T> {
+    fn get_value_at(&self, indices: Ind) -> Option<T> {
         self.call(indices)
     }
 }
@@ -128,7 +128,7 @@ impl<C1, C2, C3, C4, T: Clone + Copy> MapValD3<T>
     for ClosureOneOf4<C1, C2, C3, C4, Ind, Option<T>>
 {
     #[inline(always)]
-    fn get_val_by_key(&self, indices: Ind) -> Option<T> {
+    fn get_value_at(&self, indices: Ind) -> Option<T> {
         self.call(indices)
     }
 }
@@ -136,7 +136,7 @@ impl<C1, C2, C3, C4, T: Clone + Copy> MapValD3<T>
 // non-recursive - only val
 impl<T: Clone + Copy> MapValD3<T> for Box<dyn Fn(Ind) -> Option<T>> {
     #[inline(always)]
-    fn get_val_by_key(&self, indices: Ind) -> Option<T> {
+    fn get_value_at(&self, indices: Ind) -> Option<T> {
         (self)(indices)
     }
 }
@@ -145,7 +145,7 @@ impl<T: Clone + Copy> MapValD3<T> for Box<dyn Fn(Ind) -> Option<T>> {
 #[cfg(any(feature = "impl_all", feature = "impl_ndarray"))]
 impl<T: Clone + Copy> MapValD3<T> for ndarray::Array3<T> {
     #[inline(always)]
-    fn get_val_by_key(&self, key: Ind) -> Option<T> {
+    fn get_value_at(&self, key: Ind) -> Option<T> {
         self.get([key.0, key.1, key.2]).copied()
     }
 }

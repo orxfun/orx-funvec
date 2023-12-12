@@ -7,7 +7,7 @@ impl<T: ?Sized, V: MapRefD3<T>> FunVecRefD3<T> for V {
     type Iter<'a, I> = MapRefD3Iter<'a, T, I, Self> where T: 'a, Self: 'a, I: Iterator<Item = Ind> + 'a;
 
     fn ref_at(&self, i: usize, j: usize, k: usize) -> Option<&T> {
-        self.get_ref_by_key((i, j, k))
+        self.get_ref_at((i, j, k))
     }
 
     fn ref_iter_over<'a, I>(&self, indices: I) -> Self::Iter<'_, I>
