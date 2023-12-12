@@ -85,7 +85,7 @@ pub trait FunVecD2<T> {
         Self: 'a,
         I: Iterator<Item = Ind> + 'a;
 
-    /// Returns the value at the given `indices` or `None` if the position is empty.
+    /// Returns the value at the given indices (`i`, `j`) or `None` if the position is empty.
     ///
     /// This allows to access elements of all funvec implementations in a unified way. Thanks to monomorphization, this abstraction does not have a performance penalty.
     ///
@@ -336,7 +336,7 @@ pub trait FunVecRefD2<T: ?Sized> {
         Self: 'a,
         I: Iterator<Item = Ind> + 'a;
 
-    /// Returns a reference to the element at the given `indices` or `None` if the position is empty.
+    /// Returns a reference to the element at the given indices (`i`, `j`) or `None` if the position is empty.
     ///
     /// This allows to access elements of all funvec implementations in a unified way. Thanks to monomorphization, this abstraction does not have a performance penalty.
     ///

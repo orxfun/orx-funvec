@@ -133,7 +133,7 @@ pub trait FunVecD1<T> {
 /// ```rust
 /// use orx_funvec::*;
 ///
-/// fn moving_average<V: FunVecD1Ref<i32>>(observations: &V, period: usize) -> Option<i32> {
+/// fn moving_average<V: FunVecRefD1<i32>>(observations: &V, period: usize) -> Option<i32> {
 ///     let last = if period == 0 { None } else { observations.ref_at(period - 1) };
 ///     let current = observations.ref_at(period);
 ///
@@ -163,7 +163,7 @@ pub trait FunVecD1<T> {
 /// let no_data = EmptyVec::new();
 /// assert_eq!(None, moving_average(&no_data, period));
 /// ```
-pub trait FunVecD1Ref<T: ?Sized> {
+pub trait FunVecRefD1<T: ?Sized> {
     type Iter<'a, I>: Iterator<Item = Option<&'a T>> + 'a
     where
         T: 'a,
@@ -198,7 +198,7 @@ pub trait FunVecD1Ref<T: ?Sized> {
     ///     }
     /// }
     ///
-    /// fn average_student_age<S: FunVecD1Ref<Student>>(students: &S, ids: &HashSet<usize>) -> u32 {
+    /// fn average_student_age<S: FunVecRefD1<Student>>(students: &S, ids: &HashSet<usize>) -> u32 {
     ///     let mut sum_age = 0;
     ///     let mut num_students = 0;
     ///     for id in ids {
@@ -267,7 +267,7 @@ pub trait FunVecD1Ref<T: ?Sized> {
     ///     }
     /// }
     ///
-    /// fn average_student_age<S: FunVecD1Ref<Student>>(students: &S, ids: &HashSet<usize>) -> u32 {
+    /// fn average_student_age<S: FunVecRefD1<Student>>(students: &S, ids: &HashSet<usize>) -> u32 {
     ///     let (count, sum) = students.ref_iter_over(ids.iter().copied())
     ///         .flatten()
     ///         .map(|student| student.age)

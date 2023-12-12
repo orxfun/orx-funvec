@@ -1,9 +1,9 @@
 use crate::{
     impl_dim1::iterators::mapref_iter::{MapRef, MapRefIter},
-    FunVecD1Ref,
+    FunVecRefD1,
 };
 
-impl<T: ?Sized, V: MapRef<T>> FunVecD1Ref<T> for V {
+impl<T: ?Sized, V: MapRef<T>> FunVecRefD1<T> for V {
     type Iter<'a, I> = MapRefIter<'a, T, I, Self> where T: 'a, Self: 'a, I: Iterator<Item = usize> + 'a;
 
     fn ref_at(&self, index: usize) -> Option<&T> {

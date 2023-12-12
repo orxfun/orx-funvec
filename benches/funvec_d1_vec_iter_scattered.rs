@@ -1,5 +1,5 @@
 use criterion::{black_box, criterion_group, criterion_main, BenchmarkId, Criterion};
-use orx_funvec::FunVecD1Ref;
+use orx_funvec::FunVecRefD1;
 
 // data
 fn get_vec(n: usize) -> Vec<usize> {
@@ -16,7 +16,7 @@ fn get_indices(n: usize) -> Vec<usize> {
 fn use_iter(slice: &[usize], indices: &[usize]) -> usize {
     indices.iter().map(|i| &slice[*i]).sum()
 }
-fn use_funvec_iterover<F: FunVecD1Ref<usize>>(vec: &F, indices: &[usize]) -> usize {
+fn use_funvec_iterover<F: FunVecRefD1<usize>>(vec: &F, indices: &[usize]) -> usize {
     vec.ref_iter_over(indices.iter().cloned()).flatten().sum()
 }
 

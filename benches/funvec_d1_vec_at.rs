@@ -1,5 +1,5 @@
 use criterion::{black_box, criterion_group, criterion_main, BenchmarkId, Criterion};
-use orx_funvec::FunVecD1Ref;
+use orx_funvec::FunVecRefD1;
 
 // data
 fn get_vec(n: usize) -> Vec<usize> {
@@ -21,7 +21,7 @@ fn use_slice_get(n: usize, slice: &[usize]) -> usize {
     }
     sum
 }
-fn use_funvec<F: FunVecD1Ref<usize>>(n: usize, vec: &F) -> usize {
+fn use_funvec<F: FunVecRefD1<usize>>(n: usize, vec: &F) -> usize {
     let mut sum = 0;
     for i in 0..n {
         sum += vec.ref_at(i).unwrap();

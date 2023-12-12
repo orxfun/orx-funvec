@@ -1,7 +1,7 @@
 use crate::{
     funvec_d2::Ind,
     vectors_by_scalars::{EmptyVec, ScalarAsVec},
-    FunVecD1Ref,
+    FunVecRefD1,
 };
 use orx_closure::{ClosureOptRef, ClosureOptRefOneOf2, ClosureOptRefOneOf3, ClosureOptRefOneOf4};
 use std::{
@@ -49,33 +49,33 @@ impl<T> MapRefD2<T> for EmptyVec<T> {
         None
     }
 }
-impl<T, V1: FunVecD1Ref<T>> MapRefD2<T> for Vec<V1> {
+impl<T, V1: FunVecRefD1<T>> MapRefD2<T> for Vec<V1> {
     #[inline(always)]
     fn get_ref_by_key(&self, indices: Ind) -> Option<&T> {
         self.get(indices.0).and_then(|x| x.ref_at(indices.1))
     }
 }
-impl<const N: usize, T, V1: FunVecD1Ref<T>> MapRefD2<T> for [V1; N] {
+impl<const N: usize, T, V1: FunVecRefD1<T>> MapRefD2<T> for [V1; N] {
     #[inline(always)]
     fn get_ref_by_key(&self, indices: Ind) -> Option<&T> {
         self.get(indices.0).and_then(|x| x.ref_at(indices.1))
     }
 }
 
-impl<T, V1: FunVecD1Ref<T>> MapRefD2<T> for HashMap<usize, V1> {
+impl<T, V1: FunVecRefD1<T>> MapRefD2<T> for HashMap<usize, V1> {
     #[inline(always)]
     fn get_ref_by_key(&self, indices: Ind) -> Option<&T> {
         self.get(&indices.0).and_then(|x| x.ref_at(indices.1))
     }
 }
-impl<T, V1: FunVecD1Ref<T>> MapRefD2<T> for BTreeMap<usize, V1> {
+impl<T, V1: FunVecRefD1<T>> MapRefD2<T> for BTreeMap<usize, V1> {
     #[inline(always)]
     fn get_ref_by_key(&self, indices: Ind) -> Option<&T> {
         self.get(&indices.0).and_then(|x| x.ref_at(indices.1))
     }
 }
 #[cfg(any(feature = "impl_all", feature = "impl_indexmap"))]
-impl<T, V1: FunVecD1Ref<T>> MapRefD2<T> for indexmap::IndexMap<usize, V1> {
+impl<T, V1: FunVecRefD1<T>> MapRefD2<T> for indexmap::IndexMap<usize, V1> {
     #[inline(always)]
     fn get_ref_by_key(&self, indices: Ind) -> Option<&T> {
         self.get(&indices.0).and_then(|x| x.ref_at(indices.1))
