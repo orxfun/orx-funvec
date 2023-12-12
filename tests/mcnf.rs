@@ -1,5 +1,5 @@
 use orx_closure::Capture;
-use orx_funvec::{FunVecD1, FunVecD2, ScalarAsVec};
+use orx_funvec::{FunVec, ScalarAsVec};
 use std::collections::HashMap;
 
 const N: usize = 4;
@@ -15,9 +15,9 @@ struct FakeResult {
 #[derive(derive_new::new)]
 struct FakeMcnfSolver<Demands, Costs, Capacities>
 where
-    Demands: FunVecD1<Unit>,
-    Costs: FunVecD2<Unit>,
-    Capacities: FunVecD2<Unit>,
+    Demands: FunVec<1, Unit>,
+    Costs: FunVec<2, Unit>,
+    Capacities: FunVec<2, Unit>,
 {
     demands: Demands,
     costs: Costs,
@@ -26,9 +26,9 @@ where
 
 impl<Demands, Costs, Capacities> FakeMcnfSolver<Demands, Costs, Capacities>
 where
-    Demands: FunVecD1<Unit>,
-    Costs: FunVecD2<Unit>,
-    Capacities: FunVecD2<Unit>,
+    Demands: FunVec<1, Unit>,
+    Costs: FunVec<2, Unit>,
+    Capacities: FunVec<2, Unit>,
 {
     fn fake_solve(&self) -> FakeResult {
         let sum_demands = self
@@ -42,11 +42,11 @@ where
         let mut sum_capacities = 0;
         for i in 0..N {
             for j in 0..N {
-                if let Some(cost) = self.costs.at(i, j) {
+                if let Some(cost) = self.costs.at([i, j]) {
                     sum_costs += cost;
                 }
 
-                if let Some(capacity) = self.capacities.at(i, j) {
+                if let Some(capacity) = self.capacities.at((i, j)) {
                     sum_capacities += capacity;
                 }
             }
@@ -55,7 +55,7 @@ where
     }
 }
 
-fn const_if_not_self_edge(ij: (usize, usize), value: i32) -> Option<i32> {
+fn some_if_not_self_edge(ij: (usize, usize), value: i32) -> Option<i32> {
     if ij.0 == ij.1 {
         None
     } else {
@@ -78,11 +78,12 @@ fn single_commodity_mcnf() {
     let demand = 10;
 
     // demands vector as a no-box orx_closure::Closure
-    let demands = Capture((source, sink, demand)).fun(|(s, t, d), i| match (i == *s, i == *t) {
-        (true, _) => Some(*d),
-        (_, true) => Some(-*d),
-        _ => None,
-    });
+    let demands =
+        Capture((source, sink, demand)).fun(|(s, t, d), i: usize| match (i == *s, i == *t) {
+            (true, _) => Some(*d),
+            (_, true) => Some(-*d),
+            _ => None,
+        });
 
     // complete cost matrix using ndarray::Array2
     let mut costs = ndarray::Array2::zeros((N, N));
@@ -101,7 +102,7 @@ fn single_commodity_mcnf() {
 
     // capacities matrix as a box dyn Fn
     let capacities: Box<dyn Fn((usize, usize)) -> Option<i32>> =
-        Box::new(|ij: (usize, usize)| const_if_not_self_edge(ij, 100));
+        Box::new(|ij: (usize, usize)| some_if_not_self_edge(ij, 100));
 
     // simulate & assert
     let solver = FakeMcnfSolver::new(demands, costs, capacities);
@@ -181,7 +182,7 @@ fn shortest_distance() {
     let sink = 1;
 
     // demands vector as a no-box orx_closure::Closure
-    let demands = Capture((source, sink)).fun(|(s, t), i| match (i == *s, i == *t) {
+    let demands = Capture((source, sink)).fun(|(s, t), i: usize| match (i == *s, i == *t) {
         (true, _) => Some(1),
         (_, true) => Some(-1),
         _ => None,
@@ -213,7 +214,7 @@ fn shortest_num_edges() {
     let sink = 1;
 
     // demands vector as a no-box orx_closure::Closure
-    let demands = Capture((source, sink)).fun(|(s, t), i| match (i == *s, i == *t) {
+    let demands = Capture((source, sink)).fun(|(s, t), i: usize| match (i == *s, i == *t) {
         (true, _) => Some(1),
         (_, true) => Some(-1),
         _ => None,
@@ -221,7 +222,7 @@ fn shortest_num_edges() {
 
     // uniform capacities and costs for all edges
     let costs = ScalarAsVec(1);
-    let capacities = Capture(()).fun(|_, ij| const_if_not_self_edge(ij, 1));
+    let capacities = Capture(()).fun(|_, ij| some_if_not_self_edge(ij, 1));
 
     // simulate & assert
     let solver = FakeMcnfSolver::new(demands, costs, capacities);

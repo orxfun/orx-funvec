@@ -2,23 +2,31 @@
 name = "orx-funvec"
 version = "0.1.0"
 edition = "2021"
+authors = ["orxfun <orx.ugur.arikan@gmail.com>"]
+description = "Traits to unify access to elements of n-dimensional vectors which are particularly useful in algorithms requiring both flexibility through abstraction over inputs and performance through monomorphization."
+license = "MIT"
+repository = "https://github.com/orxfun/orx-closure/"
+keywords = ["algorithm", "vec", "array", "matrix", "closure"]
+categories = ["algorithms", "data-structures", "mathematics"]
 
 [dependencies]
 derive-new = "0.6"
 orx-closure = "0.1"
 indexmap = { version = "2.1", optional = true }
 ndarray = { version = "0.15", optional = true }
+smallvec = { version = "1.11", optional = true }
 
 [dev-dependencies]
 criterion = { version = "0.5", features = ["html_reports"] }
 test-case = "3.3"
 
 [[bench]]
-name = "funvec_d1_scalar_optimization"
+name = "d1_vec_iter_scattered"
 harness = false
 
 [features]
-default = []
-impl_all = ["ndarray", "indexmap"]
-impl_ndarray = ["ndarray"]
+default = ["smallvec"]
+impl_all = ["indexmap", "ndarray", "smallvec"]
 impl_indexmap = ["indexmap"]
+impl_ndarray = ["ndarray"]
+impl_smallvec = ["smallvec"]
