@@ -13,13 +13,15 @@ Traits to unify access to elements of n-dimensional vectors which are particular
 * The elements are not necessarily contagious or dense. They can rather represent any level of sparsity/density depending on the underlying type.
 * Assumed to be of infinite length.
 
-Additionally, the trait provides with, auto implements, the `iter_over` method which allows to iterate over values of the vector over given indices.
+Additionally, the trait provides with, auto implements, the `iter_over` method which allows to iterate over values of the vector at the given indices.
 
 The crate also provides the reference returning counterpart `FunVecRef<const DIM: usize, T>` requiring the method `fn ref_at<Idx: IntoIndex<DIM>>(&self, index: Idx) -> Option<&T>`.
 
 ## Implementations and Features
 
-This crate provides implementations to a wide range of types. The following implementations are optionally provided through features:
+This crate provides implementations for a wide range of types which are useful in algorithms. As mentioned above, implementing the trait for a new type is straightforward.
+
+Finally, the following implementations are optionally provided through features:
 
 * `ndarray` by `impl_ndarray` feature,
 * `indexmap` by `impl_indexmap` feature,
@@ -39,7 +41,7 @@ Assume we need to solve a network problem, namely minimum cost network flow (mcn
 The mcnf problem provides a certain level of abstraction over inputs. For instance:
 * If demands are non-zero only for two nodes, the problem is a single commodity problem; otherwise, it can represent a multi commodity mcnf problem.
 * If demands are 1 and -1 for source and sink nodes and zero for all others, and if capacities are irrelevant, the problem becomes a shortest path problem.
-* If we want to find the shortest number of arcs rather than the shortest path, we can use a costs matrix which is 1 for all arcs.
+* If we want to find the least number of arcs rather than the shortest path, we can use a costs matrix whose elements are 1 for all arcs.
 
 Abstraction over the inputs is powerful since it allows to implement a generic mcnf solver without the need to make assumptions on the concrete input types.
 
@@ -242,7 +244,7 @@ Next, we solve a shortest distance problem with the generic solver:
 
 * demands vector is all zeros except for the source and sink represented as a cheap closure (`Closure<_, usize, Unit>`),
 * arc costs are computed as Euclidean distances by a closure using captured node locations (`Closure<_, (usize, usize), Unit>`),
-* capacities are all-ones-matrix represented by a scalar value which has the memory size of a number and matrix accesses will completely be with the value (`ScalarAsVec<Unit>`).
+* capacities are all-ones-matrix represented by a scalar value which has the memory size of a number and `at` calls will be replaced by the inlined value (`ScalarAsVec<Unit>`).
 
 ```rust
 let source = 3;
