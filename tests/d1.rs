@@ -122,7 +122,7 @@ fn ref_assert_maps<V: FunVecRef<1, i32>>(vec: &V) {
 fn hashmap() {
     use std::collections::HashMap;
 
-    let map = HashMap::from_iter([(1, 10), (2, 20), (7, 70)].into_iter());
+    let map = HashMap::from_iter([(1, 10), (2, 20), (7, 70)]);
     val_assert_maps(&map);
     ref_assert_maps(&map);
 }
@@ -130,7 +130,7 @@ fn hashmap() {
 fn btreemap() {
     use std::collections::BTreeMap;
 
-    let map = BTreeMap::from_iter([(1, 10), (2, 20), (7, 70)].into_iter());
+    let map = BTreeMap::from_iter([(1, 10), (2, 20), (7, 70)]);
     val_assert_maps(&map);
     ref_assert_maps(&map);
 }
@@ -139,14 +139,14 @@ fn btreemap() {
 fn indexmap() {
     use indexmap::IndexMap;
 
-    let map = IndexMap::from_iter([(1, 10), (2, 20), (7, 70)].into_iter());
+    let map = IndexMap::from_iter([(1, 10), (2, 20), (7, 70)]);
     val_assert_maps(&map);
     ref_assert_maps(&map);
 }
 
 // closures
 #[test]
-fn closure_nocapture() {
+fn closure_no_capture() {
     let closure = Capture(()).fun(|_, i: usize| match i {
         1 => Some(10),
         2 => Some(20),
@@ -188,7 +188,7 @@ fn closure_nocapture() {
 
 #[test]
 fn closure_capture() {
-    let valid_indices: HashSet<usize> = HashSet::from_iter([1, 2, 7].into_iter());
+    let valid_indices: HashSet<usize> = HashSet::from_iter([1, 2, 7]);
 
     let closure = Capture(valid_indices).fun(|v, i: usize| {
         if v.contains(&i) {
@@ -223,7 +223,7 @@ fn box_dyn_fn() {
     });
     val_assert_maps(&closure);
 
-    let valid_indices: HashSet<usize> = HashSet::from_iter([1, 2, 7].into_iter());
+    let valid_indices: HashSet<usize> = HashSet::from_iter([1, 2, 7]);
     let closure: Box<dyn Fn(usize) -> Option<i32>> = Box::new(move |i: usize| {
         if valid_indices.contains(&i) {
             Some((i * 10) as i32)

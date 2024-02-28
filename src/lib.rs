@@ -35,7 +35,7 @@
 //!
 //! You may notice the pattern in the indices; `(usize, usize)` or `[usize, usize]` can be used interchangeable as they both implement `IntoIndex<2>`. And as we move to higher dimensions, only the index dimension changes.
 //!
-//! However, the recursive implementations to allow for compositisons are also available. For instance all of the following types implement `FunVec<2, T>` for any `V1` provided that `V1` implements `FunVec<1, T>`:
+//! However, the recursive implementations to allow for compositions are also available. For instance all of the following types implement `FunVec<2, T>` for any `V1` provided that `V1` implements `FunVec<1, T>`:
 //!
 //! * `Vec<V1>`
 //! * `[V1; N]`

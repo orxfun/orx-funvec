@@ -16,7 +16,7 @@ fn get_indices(n: usize) -> Vec<usize> {
 fn use_iter(slice: &[usize], indices: &[usize]) -> usize {
     indices.iter().map(|i| &slice[*i]).sum()
 }
-fn use_funvec_iterover<F: FunVecRef<1, usize>>(vec: &F, indices: &[usize]) -> usize {
+fn use_funvec_iter_over<F: FunVecRef<1, usize>>(vec: &F, indices: &[usize]) -> usize {
     vec.ref_iter_over(indices.iter().cloned()).flatten().sum()
 }
 
@@ -34,11 +34,11 @@ fn bench_funvec_vec(c: &mut Criterion) {
             })
         });
 
-        group.bench_with_input(BenchmarkId::new("use_funvec_iterover", n), n, |b, n| {
+        group.bench_with_input(BenchmarkId::new("use_funvec_iter_over", n), n, |b, n| {
             b.iter(|| {
                 let vec = get_vec(*n);
                 let ind = get_indices(*n);
-                use_funvec_iterover(black_box(&vec), black_box(&ind))
+                use_funvec_iter_over(black_box(&vec), black_box(&ind))
             })
         });
     }
