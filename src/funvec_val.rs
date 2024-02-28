@@ -125,7 +125,7 @@ use crate::{index::IntoIndex, iter_over_val::IterOverValues};
 /// Implementing the trait requires implementation of only the `fn at<Idx: IntoIndex<DIM>>(&self, index: Idx) -> Option<T>` method.
 ///
 /// Assume we are working with distance matrices.
-/// In certaion scenarios, we observe that we access only a limited number of pairs.
+/// In certain scenarios, we observe that we access only a limited number of pairs.
 /// Assuming the distance computation is expensive, we do not want to populate and store the entire matrix.
 /// Instead, we implement a distance provider with caching capabilities.
 /// The goal is to be able to use this provider as a generic distance matrix, and hence, we implement `FunVec<2, _>`.
