@@ -1,6 +1,6 @@
 [package]
 name = "orx-funvec"
-version = "0.1.4"
+version = "0.1.5"
 edition = "2021"
 authors = ["orxfun <orx.ugur.arikan@gmail.com>"]
 description = "Traits to unify access to elements of n-dimensional vectors which are particularly useful in algorithms requiring both flexibility through abstraction over inputs and performance through monomorphization."
