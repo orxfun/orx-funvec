@@ -1,5 +1,7 @@
 # orx-funvec
 
+**The experimental ideas here have been extended and transformed into vector traits defined in the [orx-v](https://crates.io/crates/orx-v) crate, which supports functional vectors in addition to others. Therefore, this crate will be discontinued, but the idea will be continued in the orx-v crate.**
+
 Traits to unify access to elements of n-dimensional vectors which are particularly useful in algorithms requiring both flexibility through abstraction over inputs and performance through monomorphization.
 
 ## A. Traits and Methods
